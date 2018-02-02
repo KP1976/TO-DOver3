@@ -7,6 +7,9 @@
 
   /* Fonty */
   --font: 'Alegreya';
+  --font-small: 1.4rem;
+  --font-normal: 1.6rem;
+  --font-bigger: 1.8rem;
 
   /* Bordery */
   --border-radius: 0.3rem;
@@ -32,6 +35,7 @@
 .tasks-box {
   align-items: center;
   background-color: var(--dark-gray);
+  border-radius: var(--border-radius);
   display: flex;
   flex-direction: column;
   padding: 5rem 0;
@@ -61,11 +65,11 @@
   background-color: var(--cream);
   border: none;
   border-radius: var(--border-radius);
-  font-size: 1.4rem;
+  font-size: var(--font-small);
   height: 4rem;
   outline-color: var(--yellow);
   padding: 1rem 2rem;
-  width: 30rem;
+  width: 96%;
 }
 
 .h-line {
@@ -81,7 +85,7 @@
 
 .tasks-list {
   display: grid;
-  grid-row-gap: 2rem;
+  grid-row-gap: 1.5rem;
   list-style-type: none;
   padding: 2rem 1rem 0;
   width: 100%;
@@ -99,16 +103,16 @@
   border: none;
   border-radius: var(--border-radius);
   display: grid;
-  font-size: 1.4rem;
-  grid-template-columns: 40px 1fr 40px 40px;
-  grid-template-rows: 40px;
+  font-size: var(--font-small);
+  grid-template-columns: auto 1fr repeat(2, auto);
   justify-content: center;
   width: 100%;
 }
 
 .task-id {
-  font-size: 1.6rem;
+  font-size: var(--font-normal);
   line-height: 1;
+  padding: 0 1.5rem;
   position: relative;
   text-align: center;
 }
@@ -124,7 +128,7 @@
 }
 
 .task-text {
-  font-size: 1.4rem;
+  font-size: var(--font-small);
   padding: 1rem;
 }
 
@@ -133,8 +137,9 @@
   border: none;
   color: var(--dark-gray);
   cursor: pointer;
-  font-size: 1.6rem;
+  font-size:  var(--font-normal);
   line-height: 1;
+  padding: 0 1.2rem;
   position: relative;
 }
 
@@ -150,18 +155,20 @@
 
 .task-date {
   color: var(--yellow);
-  font-size: 1.4rem;
+  font-size: var(--font-small);
 }
 
 .delete-all-tasks {
   background-color: var(--dirty-red);
   border: none;
+  border-radius: var(--border-radius);
   color: var(--cream);
+  cursor: pointer;
   font-size: 2rem;
   font-weight: bold;
-  height: 4rem;
+  padding: 1rem 0;
   text-transform: uppercase;
-  width: 30rem;
+  width: 96%;
 }
 
 .footer {
@@ -169,4 +176,48 @@
   font-weight: bold;
   margin-top: 2rem;
   text-align: center;
+}
+
+/* Media Queries */
+
+@media (min-width: 530px) {
+  .tasks-box {
+    padding: 5rem 5rem;
+  }
+  
+  .task-input {
+    font-size: var(--font-normal);
+    width: 100%;
+  }
+  
+  .tasks-list {
+    padding: 2rem 0 0;
+  }
+
+  .task {
+    font-size: var(--font-normal);
+  }
+
+  .task-id {
+    font-size: var(--font-bigger);
+  }
+
+  .task-text {
+    font-size: var(--font-normal);
+    padding: 1rem;
+  }
+
+  .task-edit, .task-delete {
+    font-size:  var(--font-bigger);
+  }
+
+  .task-date {
+    color: var(--yellow);
+    font-size: var(--font-normal);
+  }
+
+  .delete-all-tasks {
+    font-size: 2.5rem;
+    width: 100%;
+  }
 }
