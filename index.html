@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Alegreya:400,700&amp;subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <title>Lista zadań do wykonania</title>
+</head>
+<body>
+  <div class="container">
+    <main class="tasks-box">
+      <h1 class="title">Lista Zadań Do&nbspZrobienia</h1>
+      <label class="task-label">Co chesz zrobić?</label>
+      <input class="task-input" type="text" placeholder="kliknij tutaj i napisz zadanie">
+      <hr class="h-line">
+      <h2 class="sub-title">Twoja lista zadań</h2>
+      
+      <!-- Poniżej jest zimplementowane w JS -->
+      <ul class="tasks-list">
+        <li class="task-wrapper">
+          <div class="task">
+            <span class="task-id">1</span>
+            <span class="task-text">Tekst zadania</span>
+            <button class="task-edit"><i class="fas fa-cog fa-pulse"></i></button>
+            <button class="task-delete"><i class="fas fa-times"></i></button>
+          </div>
+          <span class="task-date">Data utworzenia: 1.2.2018 r.</span>
+        </li>
+        <li class="task-wrapper">
+          <div class="task">
+            <span class="task-id">1</span>
+            <span class="task-text">Tekst zadania</span>
+            <button class="task-edit"><i class="fas fa-cog"></i></button>
+            <button class="task-delete"><i class="fas fa-times"></i></button>
+          </div>
+          <span class="task-date">Data utworzenia: 1.2.2018 r.</span>
+        </li>
+      </ul>
+      <!-- -->
+      
+      <hr class="h-line">
+      <label class="task-label">Szukaj zadania</label>
+      <input class="task-input" type="text" placeholder="Wyszukaj zadanie">
+      <hr class="h-line">
+      <button class="delete-all-tasks">skasuj wszystkie zadania</button>
+    </main>
+    <footer class="footer">&copy Krzysztof Pawłowski (KP1976)</footer>
+  </div>
+</body>
+</html>
