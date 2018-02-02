@@ -166,6 +166,7 @@
   cursor: pointer;
   font-size: 2rem;
   font-weight: bold;
+  outline: none;
   padding: 1rem 0;
   text-transform: uppercase;
   width: 96%;
