@@ -180,7 +180,7 @@
 
 /* Media Queries */
 
-@media (min-width: 530px) {
+@media screen and (min-width: 530px) {
   .tasks-box {
     padding: 5rem 5rem;
   }
