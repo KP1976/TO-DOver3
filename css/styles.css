@@ -72,6 +72,25 @@
   width: 96%;
 }
 
+.add-task, .delete-all-tasks {
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--cream);
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: bold;
+  outline: none;
+  padding: 1rem 0;
+  text-transform: uppercase;
+  width: 96%;
+}
+
+.add-task {
+  background-color: var(--yellow);
+  color: var(--dark-gray);
+  margin-top: 2rem;
+}
+
 .h-line {
   border-top: 1px solid var(--yellow);
   border-bottom: none;
@@ -93,6 +112,7 @@
 
 .task-wrapper {
   align-items: center;
+  animation: taskMove .7s ease-in-out forwards;
   display: flex;
   flex-direction: column;
 }
@@ -139,6 +159,7 @@
   cursor: pointer;
   font-size:  var(--font-normal);
   line-height: 1;
+  outline: none;
   padding: 0 1.2rem;
   position: relative;
 }
@@ -160,16 +181,6 @@
 
 .delete-all-tasks {
   background-color: var(--dirty-red);
-  border: none;
-  border-radius: var(--border-radius);
-  color: var(--cream);
-  cursor: pointer;
-  font-size: 2rem;
-  font-weight: bold;
-  outline: none;
-  padding: 1rem 0;
-  text-transform: uppercase;
-  width: 96%;
 }
 
 .footer {
@@ -177,6 +188,45 @@
   font-weight: bold;
   margin-top: 2rem;
   text-align: center;
+}
+
+.alert {
+  animation: alert .5s ease-in-out forwards;
+  background-color: var(--dirty-red);
+  border-radius: var(--border-radius);
+  color: var(--cream);
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  width: 96%;
+}
+
+@keyframes alert {
+  0% {
+    transform: scale(.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes taskMove {
+  0% {
+    transform: translate(-1000px);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(20px);
+  }
+  100% {
+    transform: translate(0);
+    opacity: 1;
+  }
 }
 
 /* Media Queries */
@@ -189,6 +239,10 @@
   .task-input {
     font-size: var(--font-normal);
     width: 100%;
+  }
+
+  .add-task {
+    width: 50%;
   }
   
   .tasks-list {
@@ -217,7 +271,7 @@
     font-size: var(--font-normal);
   }
 
-  .delete-all-tasks {
+  .delete-all-tasks, .alert {
     font-size: 2.5rem;
     width: 100%;
   }
