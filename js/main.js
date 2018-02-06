@@ -89,7 +89,14 @@ const Main = (Vars => {
 
   // Funkcja tworzy listę zadań z inkrementowanym indeksem, edycją zadania, kasowaniem zadania i datą     powstania zadania
   function makeTasksList() {
-    const dateVars = executeDate();
+    let dateVars = executeDate();
+
+    if(dateVars.minutes >= 0 && dateVars.minutes < 10)
+      dateVars.minutes = '0' + dateVars.minutes;
+
+    if(dateVars.seconds >= 0 && dateVars.seconds < 10)
+      dateVars.seconds = '0' + dateVars.seconds;
+
     const inputValue = allVars.taskInput.value;
     const li = document.createElement('li');
 
@@ -115,6 +122,48 @@ const Main = (Vars => {
     index++;
   }
 
+  // Funkcja kasuje pojedyncze zadanie
+  function deleteTask(e) {
+    if(e.target.parentNode.parentNode.classList.contains('task-delete')) {
+      confirmDelete();
+
+      const yes = document.querySelector('.yes');    
+      const no = document.querySelector('.no');  
+
+      yes.addEventListener('click', _=> {
+        yes.parentNode.remove();
+        e.target.parentNode.parentNode.parentNode.parentNode.remove();
+        allVars.tasksBox.style.opacity = '1';
+      });
+      no.addEventListener('click', _=> {
+        no.parentNode.remove();
+        allVars.tasksBox.style.opacity = '1';
+      });
+    } 
+  }
+
+  function confirmDelete() {
+    const div = document.createElement('div');
+
+    div.className = 'confirm-delete';
+
+    div.innerHTML = `
+      <h3>Jesteś pewny?</h3>
+      <button class="confirm-btn yes">Tak</button>
+      <button class="confirm-btn no">Nie</button>
+    `;
+
+    allVars.tasksBox.insertAdjacentElement('beforebegin', div);
+    allVars.tasksBox.style.opacity = '0.3';
+  }
+
+  // Funkcja edytuje zadanie
+  function editTask(e) {
+    if(e.target.parentNode.parentNode.classList.contains('task-edit')) {
+      console.log('kliknąłeś w buttona koło zębate!');
+    }
+  }
+
   // Funckja czyści wszystkie zdania
   function clearAll() {
     while(allVars.tasksList.firstChild) {
@@ -127,6 +176,8 @@ const Main = (Vars => {
   function executeEventListeners() {
     allVars.addtask.addEventListener('click', makeTasksList);
     allVars.delAllTasks.addEventListener('click', clearAll);
+    allVars.tasksList.addEventListener('click', deleteTask);
+    allVars.tasksList.addEventListener('click', editTask);
   }
 
   // Funkcja wyświetla komunikat o błędzie, jeśli chcemy dodać puste zadanie

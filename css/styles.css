@@ -32,6 +32,44 @@
   padding: 5rem 0;
 }
 
+.confirm-delete {
+  background-color: var(--dirty-red);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  left: 50%;
+  padding: 2rem;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28rem;
+  z-index: 1;
+}
+
+.confirm-delete h3 {
+  color: var(--cream);
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 2rem;
+  text-align: center;
+  width: 100%;
+}
+
+.confirm-btn {
+  background-color: var(--cream);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--dark-gray);
+  cursor: pointer;
+  font-size: 1.6rem;
+  font-weight: bold;
+  outline-color: var(--yellow);
+  padding: 1rem 2rem;
+  text-transform: uppercase;
+  width: 45%;
+}
+
 .tasks-box {
   align-items: center;
   background-color: var(--dark-gray);
@@ -156,12 +194,15 @@
   background-color: transparent;
   border: none;
   color: var(--dark-gray);
-  cursor: pointer;
   font-size:  var(--font-normal);
   line-height: 1;
   outline: none;
   padding: 0 1.2rem;
   position: relative;
+}
+
+.svg-inline--fa path {
+  cursor: pointer;
 }
 
 .task-edit::before, .task-delete::before {
