@@ -33,6 +33,7 @@
 }
 
 .confirm-delete {
+  animation: confirm .5s ease-in-out forwards;
   background-color: var(--dirty-red);
   border-radius: var(--border-radius);
   display: flex;
@@ -40,9 +41,10 @@
   justify-content: space-between;
   left: 50%;
   padding: 2rem;
-  position: absolute;
+  position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);
+  transform-origin: top left;
   width: 28rem;
   z-index: 1;
 }
@@ -110,7 +112,7 @@
   width: 96%;
 }
 
-.add-task, .delete-all-tasks {
+.add-task, .delete-all-tasks, .update-task {
   border: none;
   border-radius: var(--border-radius);
   color: var(--cream);
@@ -123,7 +125,7 @@
   width: 96%;
 }
 
-.add-task {
+.add-task, .update-task {
   background-color: var(--yellow);
   color: var(--dark-gray);
   margin-top: 2rem;
@@ -245,6 +247,7 @@
   width: 96%;
 }
 
+/* Kluczowe klatki animacji */
 @keyframes alert {
   0% {
     transform: scale(.1);
@@ -270,8 +273,19 @@
   }
 }
 
-/* Media Queries */
+@keyframes confirm {
+  0% {
+    transform: scale(0) translate(-50%, -50%);
+  }
+  50% {
+    transform: scale(1.1) translate(-50%, -50%);
+  }
+  100% {
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
 
+/* Media Queries */
 @media screen and (min-width: 530px) {
   .tasks-box {
     padding: 5rem 5rem;
@@ -282,7 +296,7 @@
     width: 100%;
   }
 
-  .add-task {
+  .add-task, .update-task {
     width: 50%;
   }
   
@@ -304,7 +318,7 @@
   }
 
   .task-edit, .task-delete {
-    font-size:  var(--font-bigger);
+    font-size: var(--font-bigger);
   }
 
   .task-date {
