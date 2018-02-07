@@ -1,6 +1,6 @@
 const _Date = (_=> {
   // Funkcja pobiera aktualną datę i zamienia ją na polską notację
-  function executeDate() {
+  const executeDate = _=> {
     let date = new Date();
     let year = date.getFullYear();
     let month = date.getMonth();
@@ -82,8 +82,10 @@ const _Date = (_=> {
       minutes,
       seconds
     };
-  }
+  };
   
-  return executeDate;
+  return {
+    executeDate
+  };
 
 })();

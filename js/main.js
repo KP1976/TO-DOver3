@@ -1,20 +1,13 @@
 // Funkcja główna programu
-const Main = (Vars => {
+const Main = (_=> {
   const allVars = Vars.getVars(); // selektory pobrane z pliku vars.js
   let index = 1;
  
   // Funkcja tworzy listę zadań z inkrementowanym indeksem, edycją zadania, kasowaniem zadania i datą     powstania zadania
   function makeTasksList() {
-    let dateVars = _Date();
-
-    if(dateVars.minutes >= 0 && dateVars.minutes < 10)
-      dateVars.minutes = '0' + dateVars.minutes;
-
-    if(dateVars.seconds >= 0 && dateVars.seconds < 10)
-      dateVars.seconds = '0' + dateVars.seconds;
-
     const inputValue = allVars.taskInput.value;
     const li = document.createElement('li');
+    let dateVars = getTime();
 
     if(inputValue === '') {
       displayAlert();
@@ -38,9 +31,54 @@ const Main = (Vars => {
     index++;
   }
 
+  function getTime() {
+    let dateVars = _Date.executeDate();
+
+    if(dateVars.minutes >= 0 && dateVars.minutes < 10)
+      dateVars.minutes = '0' + dateVars.minutes;
+
+    if(dateVars.seconds >= 0 && dateVars.seconds < 10)
+      dateVars.seconds = '0' + dateVars.seconds;
+
+    return dateVars;
+  }
+  
+  // Funkcja edytuje zadanie
+  function editTask(e) {
+    if(e.target.classList.contains('task-edit')) {
+      const btn = document.createElement('button');
+      let task = e.target.previousElementSibling;
+
+      btn.className = 'update-task';
+      btn.textContent = 'aktualizuj zadanie';
+
+      allVars.addtask.replaceWith(btn);
+      
+      allVars.taskInput.value = task.textContent;
+
+      document.querySelector('.update-task').addEventListener('click', e => {
+        const inputValue = allVars.taskInput.value;
+        const taskDate = document.querySelector('.task-date');
+        let dateVars = getTime();
+
+        if(inputValue === '') {
+          displayAlert();
+          return;
+        } else {
+          task.textContent = inputValue;
+          allVars.taskInput.value = '';
+
+          taskDate.textContent = `${dateVars.dayName} ${dateVars.dayNumber} ${dateVars.month} ${dateVars.year} r. godz. ${dateVars.hour}:${dateVars.minutes}:${dateVars.seconds}`;
+
+          e.target.replaceWith(allVars.addtask);
+        }
+      });
+    }
+  }
+
   // Funkcja kasuje pojedyncze zadanie
   function deleteTask(e) {
-    if(e.target.parentNode.parentNode.classList.contains('task-delete')) {
+    if(e.target.classList.contains('task-delete')) {
       createConfirmDeleteAlert();
 
       const yes = document.querySelector('.yes');    
@@ -48,7 +86,7 @@ const Main = (Vars => {
 
       yes.addEventListener('click', _=> {
         yes.parentNode.remove();
-        e.target.parentNode.parentNode.parentNode.parentNode.remove();
+        e.target.parentNode.parentNode.remove();
         allVars.tasksBox.style.opacity = '1';
       });
 
@@ -74,32 +112,20 @@ const Main = (Vars => {
     allVars.tasksBox.style.opacity = '0.3';
   }
 
-  // Funkcja edytuje zadanie
-  function editTask(e) {
-    if(e.target.parentNode.parentNode.classList.contains('task-edit')) {
-      const btn = document.createElement('button');
-      let task = e.target.parentNode.parentNode.previousElementSibling;
+  // Filtrowanie zadań
+  function filterTasks(e) {
+    const text = e.target.value.toLowerCase(); // zamiana na mełe litery
+    const tasksArray = document.querySelectorAll('.task-wrapper');
 
-      btn.className = 'update-task';
-      btn.textContent = 'aktualizuj zadanie';
+    tasksArray.forEach(task => {
+      const item = task.firstChild.nextElementSibling.firstChild.nextElementSibling.nextElementSibling.textContent;
 
-      allVars.addtask.replaceWith(btn);
-      
-      allVars.taskInput.value = task.textContent;
-
-      document.querySelector('.update-task').addEventListener('click', e => {
-        const inputValue = allVars.taskInput.value;
-
-        if(inputValue === '') {
-          displayAlert();
-          return;
-        }
-
-        task.textContent = inputValue;
-        allVars.taskInput.value = '';
-        e.target.replaceWith(allVars.addtask);
-      });
-    }
+      if(item.toLowerCase().indexOf(text) !== -1) {
+        task.style.display = 'flex';
+      } else {
+        task.style.display = 'none';
+      }
+    });
   }
 
   // Funckja czyści wszystkie zadania
@@ -130,9 +156,10 @@ const Main = (Vars => {
   // Funkcja odpala wszystkie zdarzenia
   function executeEventListeners() {
     allVars.addtask.addEventListener('click', makeTasksList);
-    allVars.delAllTasks.addEventListener('click', clearAll);
-    allVars.tasksList.addEventListener('click', deleteTask);
     allVars.tasksList.addEventListener('click', editTask);
+    allVars.tasksList.addEventListener('click', deleteTask);
+    allVars.filter.addEventListener('keyup', filterTasks);
+    allVars.delAllTasks.addEventListener('click', clearAll);
   }
 
   // Funkcja wyświetla komunikat o błędzie, jeśli chcemy dodać puste zadanie
@@ -149,7 +176,7 @@ const Main = (Vars => {
   return {
     init: _=> executeEventListeners()
   };
-})(Vars);
+})();
 
 // Execute program
 document.addEventListener('DOMContentLoaded', _=> Main.init());
