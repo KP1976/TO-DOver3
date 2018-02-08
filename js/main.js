@@ -1,7 +1,7 @@
 // Funkcja główna programu
 const Main = (_=> {
   const allVars = Vars.getVars(); // selektory pobrane z pliku vars.js
-  let id = 1;
+
   // Funkcja tworzy listę zadań z inkrementowanym indeksem, edycją zadania, kasowaniem zadania i datą powstania zadania
   function makeTasksList(task) {
     let dateVars = getTime();
@@ -19,13 +19,13 @@ const Main = (_=> {
     `;
 
     allVars.tasksList.insertAdjacentElement('beforeend', li);
-    id++;
   }
 
   // Funkcja dodaje zadanie
   function addTask() {
+    
     let taskObj = {
-      id: id,
+      id: counterTasks,
       taskName: allVars.taskInput.value,
       year: getTime().year,
       month: getTime().month,
@@ -35,17 +35,18 @@ const Main = (_=> {
       minutes: getTime().minutes,
       seconds: getTime().seconds
     };
-
+    
     if(allVars.taskInput.value === '') {
       displayAlert();
       return;
     }
-
-    Storage.saveTaskInLocalStorage(taskObj);
+    
+    LocalStorage.saveTaskInLocalStorage(taskObj);
 
     makeTasksList(taskObj);
 
     allVars.taskInput.value = '';
+    counterTasks++;
   }
 
   function getTime() {
@@ -104,7 +105,7 @@ const Main = (_=> {
         yes.parentNode.remove();
         e.target.parentNode.parentNode.remove();
         allVars.tasksBox.style.opacity = '1';
-        Storage.removeTaskFromLocalStorage(e.target.parentNode.parentNode);
+        LocalStorage.removeTaskFromLocalStorage(e.target.parentNode.parentNode);
       });
 
       no.addEventListener('click', _=> {
@@ -159,7 +160,7 @@ const Main = (_=> {
         allVars.tasksList.removeChild(allVars.tasksList.firstChild);
       }
 
-      Storage.clearTasksFromLocalStorage(); // Czyszczenie LocalStorage
+      LocalStorage.clearTasksFromLocalStorage(); // Czyszczenie LocalStorage
       
       allVars.tasksBox.style.opacity = '1';
     });
@@ -169,23 +170,7 @@ const Main = (_=> {
       allVars.tasksBox.style.opacity = '1';
     });
 
-    id = 1;
-  }
-
-  function showTasksFromLocalSotrage() {
-    let tasks;
-    if(localStorage.getItem('tasks') === null) {
-      tasks = [];
-      console.log('LocalStorage jest pusty!');
-    } else {
-      tasks = JSON.parse(localStorage.getItem('tasks')); 
-    }
-
-    tasks.forEach(task => {
-      makeTasksList(task);
-    });
-
-    return tasks;
+    counterTasks = 1;
   }
 
   // Funkcja odpala wszystkie zdarzenia
@@ -209,8 +194,9 @@ const Main = (_=> {
   }
 
   return {
+    makeTasksList,
     init: _=> {
-      showTasksFromLocalSotrage();
+      counterTasks = LocalStorage.showTasksFromLocalSotrage();
       executeEventListeners();
     }
   };
