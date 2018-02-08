@@ -1,34 +1,51 @@
 // Funkcja główna programu
 const Main = (_=> {
   const allVars = Vars.getVars(); // selektory pobrane z pliku vars.js
-  let index = 1;
- 
-  // Funkcja tworzy listę zadań z inkrementowanym indeksem, edycją zadania, kasowaniem zadania i datą     powstania zadania
-  function makeTasksList() {
-    const inputValue = allVars.taskInput.value;
-    const li = document.createElement('li');
+  let id = 1;
+  // Funkcja tworzy listę zadań z inkrementowanym indeksem, edycją zadania, kasowaniem zadania i datą powstania zadania
+  function makeTasksList(task) {
     let dateVars = getTime();
+    const li = document.createElement('li');
+    
+    li.className = 'task-wrapper';
+    li.innerHTML = `
+      <div class="task">
+        <span class="task-id">${task.id}</span>
+        <span class="task-text">${task.taskName}</span>
+        <button class="task-edit"><i class="fas fa-cog"></i></button>
+        <button class="task-delete"><i class="fas fa-times"></i></button>
+      </div>
+      <span class="task-date">${task.dayName} ${task.dayNumber} ${task.month} ${task.year} r. godz. ${task.hour}:${task.minutes}:${task.seconds}</span>
+    `;
 
-    if(inputValue === '') {
+    allVars.tasksList.insertAdjacentElement('beforeend', li);
+    id++;
+  }
+
+  // Funkcja dodaje zadanie
+  function addTask() {
+    let taskObj = {
+      id: id,
+      taskName: allVars.taskInput.value,
+      year: getTime().year,
+      month: getTime().month,
+      dayNumber: getTime().dayNumber,
+      dayName: getTime().dayName,
+      hour: getTime().hour,
+      minutes: getTime().minutes,
+      seconds: getTime().seconds
+    };
+
+    if(allVars.taskInput.value === '') {
       displayAlert();
       return;
     }
 
-    li.className = 'task-wrapper';
-  
-    li.innerHTML = `
-      <div class="task">
-        <span class="task-id">${index}</span>
-        <span class="task-text">${inputValue}</span>
-        <button class="task-edit"><i class="fas fa-cog"></i></button>
-        <button class="task-delete"><i class="fas fa-times"></i></button>
-      </div>
-      <span class="task-date">${dateVars.dayName} ${dateVars.dayNumber} ${dateVars.month} ${dateVars.year} r. godz. ${dateVars.hour}:${dateVars.minutes}:${dateVars.seconds}</span>
-    `;
+    Storage.saveTaskInLocalStorage(taskObj);
 
-    allVars.tasksList.insertAdjacentElement('beforeend', li);
+    makeTasksList(taskObj);
+
     allVars.taskInput.value = '';
-    index++;
   }
 
   function getTime() {
@@ -58,7 +75,6 @@ const Main = (_=> {
 
       document.querySelector('.update-task').addEventListener('click', e => {
         const inputValue = allVars.taskInput.value;
-        const taskDate = document.querySelector('.task-date');
         let dateVars = getTime();
 
         if(inputValue === '') {
@@ -68,7 +84,7 @@ const Main = (_=> {
           task.textContent = inputValue;
           allVars.taskInput.value = '';
 
-          taskDate.textContent = `${dateVars.dayName} ${dateVars.dayNumber} ${dateVars.month} ${dateVars.year} r. godz. ${dateVars.hour}:${dateVars.minutes}:${dateVars.seconds}`;
+          task.parentNode.nextElementSibling.textContent = `${dateVars.dayName} ${dateVars.dayNumber} ${dateVars.month} ${dateVars.year} r. godz. ${dateVars.hour}:${dateVars.minutes}:${dateVars.seconds}`;
 
           e.target.replaceWith(allVars.addtask);
         }
@@ -88,6 +104,7 @@ const Main = (_=> {
         yes.parentNode.remove();
         e.target.parentNode.parentNode.remove();
         allVars.tasksBox.style.opacity = '1';
+        Storage.removeTaskFromLocalStorage(e.target.parentNode.parentNode);
       });
 
       no.addEventListener('click', _=> {
@@ -141,6 +158,8 @@ const Main = (_=> {
       while(allVars.tasksList.firstChild) {
         allVars.tasksList.removeChild(allVars.tasksList.firstChild);
       }
+
+      Storage.clearTasksFromLocalStorage(); // Czyszczenie LocalStorage
       
       allVars.tasksBox.style.opacity = '1';
     });
@@ -150,12 +169,28 @@ const Main = (_=> {
       allVars.tasksBox.style.opacity = '1';
     });
 
-    index = 1;
+    id = 1;
+  }
+
+  function showTasksFromLocalSotrage() {
+    let tasks;
+    if(localStorage.getItem('tasks') === null) {
+      tasks = [];
+      console.log('LocalStorage jest pusty!');
+    } else {
+      tasks = JSON.parse(localStorage.getItem('tasks')); 
+    }
+
+    tasks.forEach(task => {
+      makeTasksList(task);
+    });
+
+    return tasks;
   }
 
   // Funkcja odpala wszystkie zdarzenia
   function executeEventListeners() {
-    allVars.addtask.addEventListener('click', makeTasksList);
+    allVars.addtask.addEventListener('click', addTask);
     allVars.tasksList.addEventListener('click', editTask);
     allVars.tasksList.addEventListener('click', deleteTask);
     allVars.filter.addEventListener('keyup', filterTasks);
@@ -174,7 +209,10 @@ const Main = (_=> {
   }
 
   return {
-    init: _=> executeEventListeners()
+    init: _=> {
+      showTasksFromLocalSotrage();
+      executeEventListeners();
+    }
   };
 })();
 
