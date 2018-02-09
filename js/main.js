@@ -4,9 +4,8 @@ const Main = (_=> {
 
   // Funkcja tworzy listę zadań z inkrementowanym indeksem, edycją zadania, kasowaniem zadania i datą powstania zadania
   function makeTasksList(task) {
-    let dateVars = getTime();
     const li = document.createElement('li');
-    
+
     li.className = 'task-wrapper';
     li.innerHTML = `
       <div class="task">
@@ -15,7 +14,7 @@ const Main = (_=> {
         <button class="task-edit"><i class="fas fa-cog"></i></button>
         <button class="task-delete"><i class="fas fa-times"></i></button>
       </div>
-      <span class="task-date">${task.dayName} ${task.dayNumber} ${task.month} ${task.year} r. godz. ${task.hour}:${task.minutes}:${task.seconds}</span>
+      <span class="task-date">${task.date.dayName} ${task.date.dayNumber} ${task.date.month} ${task.date.year} r. godz. ${task.date.hour}:${task.date.minutes}:${task.date.seconds}</span>
     `;
 
     allVars.tasksList.insertAdjacentElement('beforeend', li);
@@ -23,30 +22,36 @@ const Main = (_=> {
 
   // Funkcja dodaje zadanie
   function addTask() {
-    
+    if(index === undefined) {
+      index = 1;
+    } else {
+      index++;
+    }
+
     let taskObj = {
-      id: counterTasks,
+      id: index,
       taskName: allVars.taskInput.value,
-      year: getTime().year,
-      month: getTime().month,
-      dayNumber: getTime().dayNumber,
-      dayName: getTime().dayName,
-      hour: getTime().hour,
-      minutes: getTime().minutes,
-      seconds: getTime().seconds
+      date: {
+        year: getTime().year,
+        month: getTime().month,
+        dayNumber: getTime().dayNumber,
+        dayName: getTime().dayName,
+        hour: getTime().hour,
+        minutes: getTime().minutes,
+        seconds: getTime().seconds
+      }
     };
-    
+ 
     if(allVars.taskInput.value === '') {
       displayAlert();
       return;
     }
-    
-    LocalStorage.saveTaskInLocalStorage(taskObj);
-
+        
     makeTasksList(taskObj);
 
+    LocalStorage.saveTaskInLocalStorage(taskObj);
+
     allVars.taskInput.value = '';
-    counterTasks++;
   }
 
   function getTime() {
@@ -88,6 +93,20 @@ const Main = (_=> {
           task.parentNode.nextElementSibling.textContent = `${dateVars.dayName} ${dateVars.dayNumber} ${dateVars.month} ${dateVars.year} r. godz. ${dateVars.hour}:${dateVars.minutes}:${dateVars.seconds}`;
 
           e.target.replaceWith(allVars.addtask);
+          console.log(JSON.parse(localStorage.getItem('tasks')));
+          console.log(task.previousElementSibling.textContent); 
+
+          // id tego zadania, które edytuje (String zamieniony na number (int))
+          let idEdit = parseInt(task.previousElementSibling.textContent); 
+
+          let tasks = JSON.parse(localStorage.getItem('tasks'));
+          
+          tasks.forEach(id => {
+            if(id.id === idEdit) {
+              id.taskName = inputValue;
+              localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+          });
         }
       });
     }
@@ -170,7 +189,19 @@ const Main = (_=> {
       allVars.tasksBox.style.opacity = '1';
     });
 
-    counterTasks = 1;
+    index = 0;
+  }
+
+  function animCogStart(e) {
+    if(e.target.classList.contains('task-edit')) {
+      e.target.firstChild.classList.toggle('fa-spin');
+    }
+  }
+
+  function animCogStop(e) {
+    if(e.target.classList.contains('task-edit')) {
+      e.target.firstChild.classList.toggle('fa-spin');
+    }
   }
 
   // Funkcja odpala wszystkie zdarzenia
@@ -178,6 +209,8 @@ const Main = (_=> {
     allVars.addtask.addEventListener('click', addTask);
     allVars.tasksList.addEventListener('click', editTask);
     allVars.tasksList.addEventListener('click', deleteTask);
+    allVars.tasksList.addEventListener('mouseover', animCogStart);
+    allVars.tasksList.addEventListener('mouseout', animCogStop);
     allVars.filter.addEventListener('keyup', filterTasks);
     allVars.delAllTasks.addEventListener('click', clearAll);
   }
@@ -196,7 +229,7 @@ const Main = (_=> {
   return {
     makeTasksList,
     init: _=> {
-      counterTasks = LocalStorage.showTasksFromLocalSotrage();
+      index = LocalStorage.showTasksFromLocalSotrage();
       executeEventListeners();
     }
   };

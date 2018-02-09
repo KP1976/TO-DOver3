@@ -130,9 +130,15 @@ svg, path {
   width: 96%;
 }
 
-.add-task, .update-task {
+.add-task {
   background-color: var(--yellow);
   color: var(--dark-gray);
+  margin-top: 2rem;
+}
+
+.update-task {
+  background-color: var(--cream);
+  color: var(--dirty-red);
   margin-top: 2rem;
 }
 

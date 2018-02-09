@@ -1,24 +1,19 @@
 const LocalStorage = (_=>{
   // Zapisywanie zadania w LocalStorage
   function saveTaskInLocalStorage(task) {
-    let tasks, id;
+    // let id, taskName, date; 
+    let tasks;
 
-    if(localStorage.getItem('tasks') === null) {
+    if(localStorage.getItem('tasks') !== null) {
+      tasks = JSON.parse(localStorage.getItem('tasks'));
+    } else {
       tasks = [];
-    } else {
-      tasks = JSON.parse(localStorage.getItem('tasks')); 
     }
 
-    if(localStorage.getItem('id') === null) {
-      id = 1;
-    } else {
-      id = JSON.parse(localStorage.getItem('id'));
-    }
-    
-    id++;
-    localStorage.setItem('id', JSON.stringify(id)); 
     tasks.push(task);
     localStorage.setItem('tasks', JSON.stringify(tasks)); 
+
+    return tasks[tasks.length - 1].id;
   }
 
   // Czyszczenie LocalStorage
@@ -30,13 +25,12 @@ const LocalStorage = (_=>{
   function removeTaskFromLocalStorage(item) {
     let tasks;
 
-    if(localStorage.getItem('tasks') === null) {
-      tasks = [];
-    } else {
+    if(localStorage.getItem('tasks') !== null) {
       tasks = JSON.parse(localStorage.getItem('tasks')); 
+    } else {
+      tasks = [];
     }
 
-    
     tasks.forEach((task, index) => {
       if(item.firstElementChild.firstElementChild.nextElementSibling.textContent === task.taskName) {
         tasks.splice(index, 1);  // od którego indexu w tablicy kasować i ile elementów
@@ -48,26 +42,19 @@ const LocalStorage = (_=>{
 
   function showTasksFromLocalSotrage() {
     let tasks;
-    let id;
-
-    if(localStorage.getItem('tasks') === null) {
-      tasks = [];
-    } else {
+    if(localStorage.getItem('tasks') !== null) {
       tasks = JSON.parse(localStorage.getItem('tasks')); 
-    }
-
-    if(localStorage.getItem('id') === null) {
-      id = 1;
     } else {
-      id = JSON.parse(localStorage.getItem('id'));
-      localStorage.setItem('id', JSON.stringify(id)); 
+      tasks = [];
     }
 
-    tasks.forEach(task => {
+    tasks.forEach((task) => {
       Main.makeTasksList(task);
     });
 
-    return id;
+    if(tasks.length > 0) {
+      return tasks[tasks.length - 1].id;
+    }
   }
 
   return {
