@@ -22,6 +22,10 @@ const Main = (_=> {
 
   // Funkcja dodaje zadanie
   function addTask() {
+    if(allVars.taskInput.value === '') {
+      displayAlert();
+      return;
+    }
     
     if(index === undefined) {
       index = 1;
@@ -43,10 +47,6 @@ const Main = (_=> {
       }
     };
     
-    if(allVars.taskInput.value === '') {
-      displayAlert();
-      return;
-    }
     
     makeTasksList(taskObj);
 
