@@ -22,12 +22,13 @@ const Main = (_=> {
 
   // Funkcja dodaje zadanie
   function addTask() {
+    
     if(index === undefined) {
       index = 1;
     } else {
       index++;
     }
-
+    
     let taskObj = {
       id: index,
       taskName: allVars.taskInput.value,
@@ -41,12 +42,12 @@ const Main = (_=> {
         seconds: getTime().seconds
       }
     };
- 
+    
     if(allVars.taskInput.value === '') {
       displayAlert();
       return;
     }
-        
+    
     makeTasksList(taskObj);
 
     LocalStorage.saveTaskInLocalStorage(taskObj);
