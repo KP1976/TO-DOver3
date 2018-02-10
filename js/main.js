@@ -94,17 +94,16 @@ const Main = (_=> {
           task.parentNode.nextElementSibling.textContent = `${dateVars.dayName} ${dateVars.dayNumber} ${dateVars.month} ${dateVars.year} r. godz. ${dateVars.hour}:${dateVars.minutes}:${dateVars.seconds}`;
 
           e.target.replaceWith(allVars.addtask);
-          console.log(JSON.parse(localStorage.getItem('tasks')));
-          console.log(task.previousElementSibling.textContent); 
 
           // id tego zadania, które edytuje (String zamieniony na number (int))
           let idEdit = parseInt(task.previousElementSibling.textContent); 
 
           let tasks = JSON.parse(localStorage.getItem('tasks'));
           
-          tasks.forEach(id => {
-            if(id.id === idEdit) {
-              id.taskName = inputValue;
+          tasks.forEach(task => {
+            if(task.id === idEdit) {
+              task.taskName = inputValue;
+              task.date = dateVars;
               localStorage.setItem('tasks', JSON.stringify(tasks));
             }
           });
